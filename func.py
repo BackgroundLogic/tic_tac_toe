@@ -1,3 +1,5 @@
+from pc_player import move_selector
+
 starting_grid = [
     ['A1', 'A2', 'A3'],
     ['B1', 'B2', 'B3'],
@@ -15,6 +17,7 @@ col = {
 }
 p1 = ' X'
 p2 = ' O'
+
 
 
 def print_grid(p_grid):
@@ -80,23 +83,27 @@ def change_player(curr_player):
         return 1
 
 
-def turn(curr_player, curr_grid):
+def turn(curr_player, curr_grid, ai_on):
     """
     Takes a player variable as an int and a 3x3 grid in the format of a list of lists
+    :param ai_on:
     :param curr_player:
     :param curr_grid:
     :return:
     """
-    print(f"\nPlayer {curr_player}'s turn.\n")
-    # loop until player submits a valid move
-    valid_move = False
-    input_string = str
-    while not valid_move:
-        # take input from the player
-        input_string = input('Enter a Row Letter and Column Number: ').upper().replace(" ", "")
-        # check if player input is a valid move
-        valid_move = check_string(player_input=input_string, g_grid=curr_grid)
-    input_list = list(input_string)
+    if ai_on and curr_player == 2:
+        input_list = move_selector(curr_grid)
+    else:
+        print(f"\nPlayer {curr_player}'s turn.\n")
+        # loop until player submits a valid move
+        valid_move = False
+        input_string = str
+        while not valid_move:
+            # take input from the player
+            input_string = input('Enter a Row Letter and Column Number: ').upper().replace(" ", "")
+            # check if player input is a valid move
+            valid_move = check_string(player_input=input_string, g_grid=curr_grid)
+        input_list = list(input_string)
 
     # Check who the current player is and place mark on board accordingly
     if curr_player == 1:
@@ -121,4 +128,18 @@ def play_again():
             print("returning false")
             return False
         else:
-            print("Invalid response, please type Y or N")
+            print("Invalid response, please type (Y/N)")
+
+
+def pc_player():
+    invalid_response = True
+    while invalid_response:
+        pc_answer = input("Are you playing against another human,\n"
+                      "or would you like to play against a PC player?\n"
+                      "PC Player on? (Y/N): ").upper()
+        if pc_answer == "Y":
+            return True
+        elif pc_answer == "N":
+            return False
+        else:
+            print("Invalid response, please type (Y/N)")
